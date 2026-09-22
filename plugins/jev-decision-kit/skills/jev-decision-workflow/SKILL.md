@@ -14,6 +14,8 @@ Use this skill when a user needs a contextual but bounded judgment in a business
 3. Check readiness with `node scripts/evaluate.mjs --config-status`. Do not claim a Jev evaluation happened unless the evaluator returned an `answers` object.
 4. Read [configuration.md](../references/configuration.md) when changing connection settings or explaining precedence.
 
+When the user asks the Agent to configure the environment directly, show the risk first and require an explicit choice: non-sensitive settings only, full current-user key persistence, or manual setup. Never persist a key by default. Full persistence is limited to the current user scope and must stop if `JEV_API_KEY` is not already available in the process environment.
+
 ## Adapt a workflow
 
 Before calling Jev, define the workflow boundary: user-visible goal, minimum evidence available, bounded output, deterministic rules kept outside Jev, and the consequence of a wrong decision.

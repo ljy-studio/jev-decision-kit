@@ -50,6 +50,29 @@ Initialization supports a base URL, endpoint, complete API URL, fallback URL, mo
 
 The API key is read only from `JEV_API_KEY` or `TYPESAFE_API_KEY` and is never written to the repository or local config file. In CI, inject `JEV_API_KEY` as a secret and omit `--persist-key`.
 
+### Agent-Managed Configuration (User Choice Required)
+
+If you want an Agent to configure Jev, require it to show the risk and wait for your choice before performing any persistent operation.
+
+> **Risk warning**: Persisting `JEV_API_KEY` writes the secret to the current Windows user's environment. Future processes started by that user may read it, and existing processes usually need to restart before seeing the new value. This does not write to GitHub, but it broadens local process access. Never write the key to a machine-wide environment variable, repository, logs, or chat history.
+
+Choose one of:
+
+1. **Non-sensitive setup only**: let the Agent configure the base URL, endpoint, model ID, and local non-secret settings; set the API key yourself.
+2. **Full Agent setup**: after explicit confirmation, let the Agent use the current `JEV_API_KEY` to run `init.mjs --persist-key`, then verify configuration without printing the key.
+3. **Manual setup**: configure everything yourself.
+
+Copy-ready prompt:
+
+```text
+I want you to configure Jev, but first show the risk and ask me to choose:
+1) configure only the non-sensitive base URL, endpoint, model ID, and local settings;
+2) after my explicit confirmation, persist the current JEV_API_KEY as a Windows user-level environment variable;
+3) let me configure everything manually.
+
+If I choose 2: do not ask me to paste the key into chat; read only the current JEV_API_KEY environment variable; never write it to a machine-wide environment variable, repository, config file, prompt, or log; verify with evaluate.mjs --config-status without printing the key. If the current process has no key, stop and tell me to set it securely or restart the process.
+```
+
 ### Quick Start (AI Agent)
 
 Send the following prompt to an Agent:

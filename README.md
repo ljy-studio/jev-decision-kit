@@ -58,6 +58,29 @@ node plugins/jev-decision-kit/scripts/evaluate.mjs --config-status
 
 API key 只从 `JEV_API_KEY` 或 `TYPESAFE_API_KEY` 环境变量读取，不会写入仓库或本地配置文件。CI 场景请使用 Secret 注入 `JEV_API_KEY`，不要使用 `--persist-key`。
 
+### Agent 代理配置（需要用户选择）
+
+如果希望由 Agent 代理完成配置，请先让 Agent 展示风险并等待选择，不要默认执行持久化操作。
+
+> **风险警告**：持久化 `JEV_API_KEY` 会把密钥写入当前 Windows 用户级环境变量。后续由该用户启动的进程可能读取此密钥；现有进程通常需要重启才能看到新值。该操作不会写入 GitHub，但会扩大本机进程可访问范围。不要将 key 写入机器级环境变量、仓库、日志或聊天记录。
+
+用户可以选择：
+
+1. **仅代理非敏感配置**：由 Agent 配置 `base URL`、`endpoint`、`model ID` 和本地非敏感配置；API key 由用户自行设置。
+2. **代理完整配置**：用户明确确认后，Agent 才能使用当前环境中的 `JEV_API_KEY` 执行 `init.mjs --persist-key`，并只验证是否配置成功，不打印密钥。
+3. **不代理配置**：用户完全手动执行初始化。
+
+可直接发送给 Agent 的提示词：
+
+```text
+我希望你代理配置 Jev，但在执行前必须先展示风险并让我选择：
+1) 只配置 base URL、endpoint、model ID 等非敏感项；
+2) 在我明确确认后，将当前环境中的 JEV_API_KEY 持久化为当前 Windows 用户级环境变量；
+3) 我自己手动配置。
+
+如果我选择 2：不要让我在聊天里粘贴 key；只读取当前环境中的 JEV_API_KEY；不要写入机器级环境变量、仓库、配置文件、prompt 或日志；执行后用 evaluate.mjs --config-status 验证，但不要输出 key。若当前环境中没有 key，停止并提示我安全地设置环境变量或重启进程。
+```
+
 ### AI Agent 快速开始
 
 将以下提示词发送给 Agent：
