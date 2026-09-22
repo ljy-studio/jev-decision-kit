@@ -1,0 +1,18 @@
+{
+  "name": "jev-decision-kit",
+  "version": "0.1.0",
+  "description": "Configure Jev and adapt bounded typed decisions to operational workflows.",
+  "author": {
+    "name": "Jev Decision Kit contributors"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jev Decision Kit",
+    "shortDescription": "Configure Jev and adapt bounded decisions to your workflow.",
+    "longDescription": "Jev Decision Kit provides a safe initialization flow, a local Jev evaluator, and a reusable workflow-adaptation skill for Codex agents.",
+    "developerName": "Jev Decision Kit contributors",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Initialize Jev for this environment, then adapt my bounded decision workflow with explicit criteria, thresholds, and human-review gates."
+  }
+}

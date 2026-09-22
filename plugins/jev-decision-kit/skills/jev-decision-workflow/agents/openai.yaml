@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jev Decision Workflow"
+  short_description: "Configure Jev and adapt bounded decisions to your workflow."
+  default_prompt: "Help me configure Jev and adapt a bounded decision workflow."

@@ -1,0 +1,76 @@
+{
+  "state": {
+    "scenario": "AI model aggregation service",
+    "error_message": "HTTP 502 Bad Gateway: upstream provider request failed after 30s timeout",
+    "request_context": {
+      "model": "vendor-x/chat-pro",
+      "route": "aggregator -> vendor-x",
+      "scope": "all requests routed to vendor-x; other providers are healthy"
+    },
+    "observed_signals": [
+      "aggregator health check is green",
+      "vendor-x latency increased sharply",
+      "no recent deployment on aggregator",
+      "same request succeeds when routed to vendor-y"
+    ]
+  },
+  "model": "jev-latest",
+  "questions": {
+    "error_family": {
+      "type": "choice",
+      "instructions": "Which bounded error family best matches the evidence?",
+      "criteria": {
+        "auth_or_credential": "Authentication, API key, signature, or permission failure is the primary signal.",
+        "quota_or_rate_limit": "The provider or aggregator rejects requests because of quota, billing, or rate limits.",
+        "upstream_dependency": "A downstream model provider is slow, unavailable, or returning gateway/server failures.",
+        "request_contract": "The request violates schema, model capability, or parameter constraints.",
+        "aggregator_internal": "The aggregator itself is the most likely failing component.",
+        "unknown": "Evidence is insufficient or contradictory."
+      }
+    },
+    "likely_root_cause": {
+      "type": "choice",
+      "instructions": "Which root cause should be investigated first?",
+      "criteria": {
+        "provider_outage_or_degradation": "The selected downstream provider is unavailable or degraded.",
+        "provider_timeout_or_network_path": "The path to the selected provider is timing out or intermittently unreachable.",
+        "provider_credential_problem": "The provider credential or permission is invalid or expired.",
+        "quota_or_billing_exhaustion": "Provider or account quota/billing is exhausted.",
+        "aggregator_release_or_config": "A recent aggregator release or route configuration change caused the issue.",
+        "request_mismatch": "The request shape or model parameters are incompatible.",
+        "unknown": "No root cause has enough evidence yet."
+      }
+    },
+    "severity": {
+      "type": "score",
+      "instructions": "Score operational severity from contained to critical based on scope, availability, and workaround.",
+      "criteria": [
+        "Single request or tenant affected; easy workaround.",
+        "A subset of traffic is failing; workaround exists.",
+        "One provider route is broadly failing; cross-provider fallback exists.",
+        "Most production traffic is failing or latency is severe; limited workaround.",
+        "Platform-wide outage or data/security impact; no practical workaround."
+      ]
+    },
+    "first_check": {
+      "type": "choice",
+      "instructions": "What should operations check first, using the least risky and most discriminating step?",
+      "criteria": {
+        "compare_provider_health_and_latency": "Check provider status, error rate, latency, and network timeout metrics for the affected route.",
+        "validate_credentials": "Validate API key, signature, permission, and secret rotation state.",
+        "check_quota_and_billing": "Check quota, rate limits, balance, and billing status.",
+        "inspect_recent_changes": "Review recent deployments, route rules, and configuration changes.",
+        "reproduce_request_contract": "Replay a minimal request and validate model/parameter compatibility.",
+        "escalate_unknown": "Collect more evidence or hand off because the evidence is insufficient."
+      }
+    },
+    "needs_human_review": {
+      "type": "noul",
+      "instructions": "Does this case need human review before applying a potentially disruptive remediation?",
+      "criteria": {
+        "true": "The evidence is low-confidence or remediation could affect production routing, credentials, or customer data.",
+        "false": "A reversible, low-risk action is clearly indicated by high-confidence evidence."
+      }
+    }
+  }
+}

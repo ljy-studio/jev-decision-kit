@@ -1,0 +1,27 @@
+name: workflow-name
+goal: Describe the user-visible outcome.
+state:
+  description: Describe the minimum evidence available at decision time.
+  redact:
+    - credentials
+    - unnecessary personal data
+questions:
+  - id: decision_id
+    type: choice
+    instructions: State one narrow judgment.
+    criteria:
+      option_a: Define option A.
+      option_b: Define option B.
+policy:
+  thresholds:
+    confidence_for_automatic_route: 0.85
+    confidence_for_human_review: 0.70
+  fallback: Describe when the current reasoning model takes over.
+  human_review: Describe when a person must decide.
+  approvals:
+    - production changes
+    - credential rotation
+calibration_cases:
+  - state: Synthetic representative input.
+    expected: option_a
+    notes: Explain why this case matters.
