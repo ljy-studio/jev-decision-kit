@@ -1,6 +1,6 @@
 {
   "name": "jev-decision-kit",
-  "version": "0.1.0+codex.20260923085000",
+  "version": "0.1.0+codex.20260923143511",
   "description": "Configure Jev and adapt bounded typed decisions to operational workflows.",
   "author": {
     "name": "Jev Decision Kit contributors"

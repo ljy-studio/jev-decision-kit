@@ -4,7 +4,7 @@
 
 A Codex Jev decision plugin for humans and AI Agents: configure Jev, call structured judgments, and adapt classification, routing, severity, priority, risk screening, and human review to business or operational workflows.
 
-**Install** · **Initialize** · **Evaluate** · **Workflow adaptation** · **Security**
+**Install** · **Initialize** · **Evaluate** · **Request authoring** · **Updates** · **Security**
 
 ## Why Jev Decision Kit?
 
@@ -30,7 +30,7 @@ cd jev-decision-kit
 codex plugin marketplace add .
 ```
 
-Then install `jev-decision-kit` in Codex and load the `jev-decision-workflow` Skill.
+Then install `jev-decision-kit` in Codex and load the `jev-decision-workflow` Skill. The repository marketplace lives at `.agents/plugins/marketplace.json`, the conventional path for a Codex Git marketplace.
 
 ### Initialize
 
@@ -128,6 +128,45 @@ After every Jev call, the Agent must show a `Jev structured result` JSON code bl
 - If an upstream response unexpectedly contains credentials, personal data, or another secret, redact only that value and disclose that redaction occurred without exposing it.
 
 This contract lets users verify that Jev was actually called and distinguish its output from the Agent's interpretation.
+
+## Author Jev Request Inputs
+
+When an Agent turns a workflow into Jev input, it should define the decision boundary first, produce a minimized `Jev request draft` JSON block, then validate locally:
+
+```powershell
+node plugins/jev-decision-kit/scripts/validate-request.mjs examples/ai-model-ops-request.json
+```
+
+The validator reports only question counts, IDs, type counts, errors, and redaction warnings; it never echoes `state` content. `--strict` treats sensitive-field warnings as failures. See [request-authoring.md](plugins/jev-decision-kit/skills/jev-decision-workflow/references/request-authoring.md) for the method and [request-authoring-prompts.md](plugins/jev-decision-kit/assets/request-authoring-prompts.md) for reusable prompts.
+
+## Plugin Updates
+
+### For users
+
+After adding the GitHub marketplace, inspect configured marketplaces first:
+
+```powershell
+node plugins/jev-decision-kit/scripts/update.mjs --marketplace jev-decision-kit
+```
+
+Refresh only after review:
+
+```powershell
+node plugins/jev-decision-kit/scripts/update.mjs --marketplace jev-decision-kit --apply --yes
+```
+
+The command uses Codex's marketplace-upgrade flow. On success, restart the Codex desktop app and start a new chat before testing the refreshed Skill. Do not assume an already-open chat has loaded the update.
+
+### For maintainers
+
+After changing the plugin, plan a version first, then explicitly write it, validate, commit, and push:
+
+```powershell
+node plugins/jev-decision-kit/scripts/release.mjs --bump patch
+node plugins/jev-decision-kit/scripts/release.mjs --bump patch --apply
+```
+
+The release script previews by default. Only `--apply` changes `plugin.json`; it never commits, tags, or pushes automatically.
 
 ## Workflow Adaptation
 

@@ -33,6 +33,12 @@ Then:
 
 Read [workflow-adaptation.md](../references/workflow-adaptation.md) for the reviewable template and [workflow-spec.yaml](../assets/workflow-spec.yaml) for a starting specification.
 
+## Author request input
+
+When a user asks to turn a business task into Jev input, read [request-authoring.md](references/request-authoring.md). Build a minimal `state`, keep each independent judgment in its own question, and choose the smallest valid Jev type. Run `node scripts/validate-request.mjs <request.json>` before evaluation; fix errors and redact every credential warning before calling Jev.
+
+Use [request-authoring-prompts.md](../assets/request-authoring-prompts.md) when the user wants a reusable prompt for drafting Jev inputs. After evaluation, follow the conversation output contract below.
+
 ## Interpret and hand off
 
 Treat probabilities and confidence as signals, not proof. Route low-confidence, high-impact, irreversible, or production-changing cases to the current reasoning model or a human. Jev must not bypass approvals, authorization, deterministic safety checks, or user confirmation.
@@ -45,5 +51,11 @@ After every Jev evaluation attempt, the Agent must show a `Jev structured result
 - On failure, show the complete safe error envelope returned by the evaluator and clearly state that Jev did not produce a decision. Do not replace a failed call with an inferred result while presenting it as Jev output.
 - Do not summarize, omit fields, or convert the structured result into prose only. A concise interpretation may follow the JSON block.
 - Redact only credentials, authorization headers, personal data, or other secret values if an upstream response unexpectedly contains them. State that redaction occurred without revealing the removed value.
+
+## Update the plugin
+
+When a user asks to check for an update, run `node scripts/update.mjs --marketplace jev-decision-kit`. This only lists configured marketplaces. To refresh the marketplace snapshot, first explain that updated plugin code will be loaded after a desktop-app restart, then wait for explicit confirmation before running `node scripts/update.mjs --marketplace jev-decision-kit --apply --yes`.
+
+After a successful upgrade, ask the user to restart the Codex desktop app and start a new chat before testing the refreshed Skill. Do not claim the current chat has loaded an updated Skill.
 
 When the user needs a new domain workflow, adapt the specification first and calibrate it with representative, adversarial, ambiguous, and no-match cases before treating it as production policy.

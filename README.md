@@ -4,7 +4,7 @@
 
 面向人类用户和 AI Agent 的 Codex Jev 决策插件：配置 Jev，调用结构化判断，并将分类、路由、严重性、优先级、风险筛查和人工复核适配到具体业务或运维流程。
 
-**安装** · **初始化** · **评估** · **工作流适配** · **安全策略**
+**安装** · **初始化** · **评估** · **入参编写** · **更新** · **安全策略**
 
 ## 为什么使用 Jev Decision Kit？
 
@@ -30,7 +30,7 @@ cd jev-decision-kit
 codex plugin marketplace add .
 ```
 
-然后在 Codex 中安装 `jev-decision-kit`，并加载 `jev-decision-workflow` Skill。
+然后在 Codex 中安装 `jev-decision-kit`，并加载 `jev-decision-workflow` Skill。仓库级 marketplace 位于 `.agents/plugins/marketplace.json`，符合 Codex 的 Git marketplace 目录约定。
 
 ### 初始化
 
@@ -136,6 +136,45 @@ Jev 只负责有界语义判断。开放式写作、精确计算、权限审批�
 - 若上游异常返回了凭证、个人信息或其他敏感值，仅可对该敏感字段脱敏，并说明发生了脱敏；不得展示原值。
 
 这项约束让用户可以直接确认 Jev 是否真实调用成功，并能区分 Jev 结果与 Agent 的后续解释。
+
+## 编写 Jev 入参
+
+当 Agent 需要把业务需求转成 Jev 入参时，应先写出决策边界，再给出最小化的 `Jev request draft` JSON，最后进行本地校验：
+
+```powershell
+node plugins/jev-decision-kit/scripts/validate-request.mjs examples/ai-model-ops-request.json
+```
+
+校验器只输出问题数量、ID、类型计数和错误/脱敏警告，不回显 `state` 内容。`--strict` 会把敏感字段警告也视为失败。完整方法见 [request-authoring.md](plugins/jev-decision-kit/skills/jev-decision-workflow/references/request-authoring.md)，可复制提示词见 [request-authoring-prompts.md](plugins/jev-decision-kit/assets/request-authoring-prompts.md)。
+
+## 插件更新
+
+### 使用者更新
+
+首次安装 GitHub marketplace 后，先检查当前已配置的 marketplace：
+
+```powershell
+node plugins/jev-decision-kit/scripts/update.mjs --marketplace jev-decision-kit
+```
+
+确认要刷新后再执行：
+
+```powershell
+node plugins/jev-decision-kit/scripts/update.mjs --marketplace jev-decision-kit --apply --yes
+```
+
+该命令调用 Codex 的 marketplace upgrade 流程。成功后必须重启 Codex 桌面应用并新建对话，更新后的 Skill 才会被加载。不要在现有对话中假定更新已经生效。
+
+### 维护者发布
+
+维护者修改插件后，先规划版本号，再显式写入版本、校验、提交并推送：
+
+```powershell
+node plugins/jev-decision-kit/scripts/release.mjs --bump patch
+node plugins/jev-decision-kit/scripts/release.mjs --bump patch --apply
+```
+
+发布脚本默认只预览；只有 `--apply` 才会更新 `plugin.json`。它不会自动提交、打 tag 或推送。
 
 ## 领域工作流适配
 
