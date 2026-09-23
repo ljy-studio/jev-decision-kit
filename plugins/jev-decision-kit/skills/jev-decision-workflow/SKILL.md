@@ -31,13 +31,13 @@ Then:
 - redact credentials, personal data, and unrelated content;
 - define confidence thresholds, fallback behavior, and human-review gates outside Jev.
 
-Read [workflow-adaptation.md](../references/workflow-adaptation.md) for the reviewable template and [workflow-spec.yaml](../assets/workflow-spec.yaml) for a starting specification.
+Read [workflow-adaptation.md](references/workflow-adaptation.md) for the reviewable template and [workflow-spec.yaml](assets/workflow-spec.yaml) for a starting specification.
 
 ## Author request input
 
 When a user asks to turn a business task into Jev input, read [request-authoring.md](references/request-authoring.md). Build a minimal `state`, keep each independent judgment in its own question, and choose the smallest valid Jev type. Run `node scripts/validate-request.mjs <request.json>` before evaluation; fix errors and redact every credential warning before calling Jev.
 
-Use [request-authoring-prompts.md](../assets/request-authoring-prompts.md) when the user wants a reusable prompt for drafting Jev inputs. After evaluation, follow the conversation output contract below.
+Use [request-authoring-prompts.md](assets/request-authoring-prompts.md) when the user wants a reusable prompt for drafting Jev inputs. After evaluation, follow the conversation output contract below.
 
 ## Interpret and hand off
 
