@@ -118,6 +118,17 @@ Question types:
 
 Jev handles bounded semantic judgments only. Open-ended writing, exact calculations, approvals, side effects, and final explanations remain with the current Agent or deterministic code.
 
+### Conversation Output Contract
+
+After every Jev call, the Agent must show a `Jev structured result` JSON code block before its interpretation, recommendations, or next steps:
+
+- On success: show the complete evaluator return envelope, including `response` and `meta`, every answer, type, selected value, confidence, probability distribution, legend, model, usage, endpoint, retry count, and cost metadata when present.
+- On failure: show the complete safe error envelope and explicitly say that Jev produced no decision.
+- Do not provide a prose-only summary or omit structured fields.
+- If an upstream response unexpectedly contains credentials, personal data, or another secret, redact only that value and disclose that redaction occurred without exposing it.
+
+This contract lets users verify that Jev was actually called and distinguish its output from the Agent's interpretation.
+
 ## Workflow Adaptation
 
 For a new domain, define the user-visible goal, minimum evidence, bounded outputs, deterministic rules that stay in code or policy, cost of error, confidence thresholds, human-review gates, and required approvals. Split independent judgments into separate typed questions and calibrate with representative, adversarial, ambiguous, and no-match cases. See [workflow-adaptation.md](plugins/jev-decision-kit/skills/jev-decision-workflow/references/workflow-adaptation.md) and [workflow-spec.yaml](plugins/jev-decision-kit/skills/jev-decision-workflow/assets/workflow-spec.yaml).

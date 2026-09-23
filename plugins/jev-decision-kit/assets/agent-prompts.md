@@ -28,11 +28,11 @@ If I choose 2: do not ask me to paste the key into chat; read only the current J
 ## Workflow adaptation prompt
 
 ```text
-Adapt Jev to my workflow. Start by defining the user-visible goal, minimum evidence, bounded decision outputs, deterministic rules that stay outside Jev, and the cost of a wrong decision. Convert each independent judgment into a separate Jev question using choice, score, or noul. Define confidence thresholds, fallback to the current reasoning model, human-review gates, required approvals, redaction rules, and representative/adversarial/ambiguous calibration cases. Do not let Jev execute side effects or bypass approval.
+Adapt Jev to my workflow. Start by defining the user-visible goal, minimum evidence, bounded decision outputs, deterministic rules that stay outside Jev, and the cost of a wrong decision. Convert each independent judgment into a separate Jev question using choice, score, or noul. Define confidence thresholds, fallback to the current reasoning model, human-review gates, required approvals, redaction rules, and representative/adversarial/ambiguous calibration cases. Do not let Jev execute side effects or bypass approval. After every Jev call, show the complete safe structured evaluator return in a `Jev structured result` JSON code block before explaining it; include both response and meta on success, or the safe error envelope on failure.
 ```
 
 ## Operational incident prompt
 
 ```text
-Use Jev to triage the incident evidence below. Return only bounded decisions for error family, likely root cause, severity, first check, and human-review requirement. Then explain the results in plain language, preserving uncertainty and separating evidence from inference. Never include credentials or trigger production changes without confirmation.
+Use Jev to triage the incident evidence below. Return only bounded decisions for error family, likely root cause, severity, first check, and human-review requirement. Immediately show the complete safe structured evaluator return in a `Jev structured result` JSON code block before any explanation: include both response and meta on success, or the safe error envelope on failure. Then explain the results in plain language, preserving uncertainty and separating evidence from inference. Never include credentials or trigger production changes without confirmation.
 ```

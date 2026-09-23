@@ -37,4 +37,13 @@ Read [workflow-adaptation.md](../references/workflow-adaptation.md) for the revi
 
 Treat probabilities and confidence as signals, not proof. Route low-confidence, high-impact, irreversible, or production-changing cases to the current reasoning model or a human. Jev must not bypass approvals, authorization, deterministic safety checks, or user confirmation.
 
+## Conversation output contract
+
+After every Jev evaluation attempt, the Agent must show a `Jev structured result` JSON code block in its user-facing reply. Do this before interpretation, recommendations, or next steps.
+
+- On success, show the complete evaluator return envelope exactly as received: both `response` and `meta`, including every answer, type, selected value, confidence, probability distribution, legend, model, usage, endpoint, retry count, and cost metadata when present.
+- On failure, show the complete safe error envelope returned by the evaluator and clearly state that Jev did not produce a decision. Do not replace a failed call with an inferred result while presenting it as Jev output.
+- Do not summarize, omit fields, or convert the structured result into prose only. A concise interpretation may follow the JSON block.
+- Redact only credentials, authorization headers, personal data, or other secret values if an upstream response unexpectedly contains them. State that redaction occurred without revealing the removed value.
+
 When the user needs a new domain workflow, adapt the specification first and calibrate it with representative, adversarial, ambiguous, and no-match cases before treating it as production policy.
